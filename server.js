@@ -22,23 +22,27 @@ app.use(
       "https://fur-ever-home-client.vercel.app",
     ],
     credentials: true,
+  
   })
 );
 
 app.use(express.json());
 
-// Auth routes - register & login
+// Auth routes
 app.use("/api/auth", authRoutes);
 
+// Admin routes
 app.use("/api/admin", adminRoutes);
 
+// Report routes
+app.use("/api/reports", reportRoutes);
+
+// Root
 app.get("/", (req, res) => {
   res.send("FurEver Home API is running...");
 });
 
-app.use("/api/reports", reportRoutes);
 
-// Local development
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV !== "production") {
@@ -46,5 +50,4 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`Server running on port ${PORT}`);
   });
 }
-
 export default app;
