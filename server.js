@@ -19,7 +19,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:3000",
-      "https://fur-ever-home.vercel.app",
+      "https://fur-ever-home-client.vercel.app",
     ],
     credentials: true,
   })
