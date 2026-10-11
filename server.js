@@ -6,6 +6,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import animalRoutes from "./routes/animalRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +38,9 @@ app.use("/api/admin", adminRoutes);
 
 // Report routes
 app.use("/api/reports", reportRoutes);
+
+app.use("/api/animals", animalRoutes);
+app.use("/api/applications", applicationRoutes);
 
 // Root
 app.get("/", (req, res) => {
