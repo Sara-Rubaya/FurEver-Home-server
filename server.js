@@ -18,7 +18,6 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:3000",
       "https://fur-ever-home-client.vercel.app",
     ],
     credentials: true,
@@ -42,12 +41,8 @@ app.get("/", (req, res) => {
   res.send("FurEver Home API is running...");
 });
 
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
+});
 
-const PORT = process.env.PORT || 5000;
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
 export default app;
