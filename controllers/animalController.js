@@ -21,20 +21,46 @@ export const createAnimal = async (req, res) => {
  
 // NOTE: Eita basic version - shudhu status ar shelter filter kore.
 // Sazid "Search & Filter" PR e eita enhance korbe (species/gender/size/age/search/sort add hobe).
+// @route  GET /api/animals?species=Dog&status=available&search=...&minAge=0&maxAge=5&sort=newest
 export const getAnimals = async (req, res) => {
   try {
-    const { status, shelter } = req.query;
+    const { species, status, size, gender, search, shelter, minAge, maxAge, sort } = req.query;
     const filter = {};
  
+    if (species) filter.species = species;
     if (status) filter.status = status;
+    if (size) filter.size = size;
+    if (gender) filter.gender = gender;
     if (shelter) filter.shelter = shelter;
  
-    const animals = await Animal.find(filter).populate("shelter", "name email").sort({ createdAt: -1 });
+    // Age range filter
+    if (minAge || maxAge) {
+      filter.age = {};
+      if (minAge) filter.age.$gte = Number(minAge);
+      if (maxAge) filter.age.$lte = Number(maxAge);
+    }
+ 
+    // Name/breed search (case-insensitive partial match)
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { breed: { $regex: search, $options: "i" } },
+      ];
+    }
+ 
+    // Sort options
+    let sortOption = { createdAt: -1 }; // default: newest first
+    if (sort === "age-asc") sortOption = { age: 1 };
+    else if (sort === "age-desc") sortOption = { age: -1 };
+    else if (sort === "name-asc") sortOption = { name: 1 };
+ 
+    const animals = await Animal.find(filter).populate("shelter", "name email").sort(sortOption);
     res.status(200).json(animals);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
  
 export const getAnimalById = async (req, res) => {
   try {
